@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Threads>
+
+    <ScreenshotThread>
+      <Name>Resetera PC 2018</Name>
+      <Url>https://www.resetera.com/threads/pc-screenshots-thread-2018.578</Url>
+      <RootDirectory>F:\Screenshots\resetera\PC_2018</RootDirectory>
+    </ScreenshotThread>
+    <ScreenshotThread>
+      <Name>Resetera Consoles 2018</Name>
+      <Url>https://www.resetera.com/threads/2018-console-screenshot-thread-read-rules-in-op.13601</Url>
+      <RootDirectory>F:\Screenshots\resetera\Consoles_2018</RootDirectory>
+    </ScreenshotThread>
+    <ScreenshotThread>
+      <Name>Neogaf PC 2018</Name>
+      <Url>https://www.neogaf.com/threads/2018-pc-screenshot-thread.1460776</Url>
+      <RootDirectory>F:\Screenshots\neogaf\PC_2018</RootDirectory>
+    </ScreenshotThread>
+    <ScreenshotThread>
+      <Name>Neogaf PC 2017</Name>
+      <Url>https://www.neogaf.com/threads/2017-pc-screenshot-thread.1329720</Url>
+      <RootDirectory>F:\Screenshots\neogaf\PC_2017</RootDirectory>
+    </ScreenshotThread>
+    <ScreenshotThread>
+      <Name>Neogaf Consoles 2018</Name>
+      <Url>https://www.neogaf.com/threads/2018-console-screenshot-thread-read-rules-in-op.1460621</Url>
+      <RootDirectory>F:\Screenshots\neogaf\Consoles_2018</RootDirectory>
+    </ScreenshotThread>
+
+    <!-- ScreenshotThread disabled so you get a chance to set the RootDirectory as you desire, once done, you can re-enable them -->
+
+    <!-- DELETE THIS LINE ONCE YOU ENTERED A PROPER ROOTDIRECTORY FOR EACH THREAD
+
+    <ScreenshotThread>
+      <Name>Resetera PC 2018</Name>
+      <Url>https://www.resetera.com/threads/pc-screenshots-thread-2018.578</Url>
+      <RootDirectory>F:\Screenshots\resetera\PC_2018</RootDirectory>
+    </ScreenshotThread>
+    <ScreenshotThread>
+      <Name>Resetera Consoles 2018</Name>
+      <Url>https://www.resetera.com/threads/2018-console-screenshot-thread-read-rules-in-op.13601</Url>
+      <RootDirectory>F:\Screenshots\resetera\Consoles_2018</RootDirectory>
+    </ScreenshotThread>
+    <ScreenshotThread>
+      <Name>Neogaf PC 2018</Name>
+      <Url>https://www.neogaf.com/threads/2018-pc-screenshot-thread.1460776</Url>
+      <RootDirectory>F:\Screenshots\neogaf\PC_2018</RootDirectory>
+    </ScreenshotThread>
+    <ScreenshotThread>
+      <Name>Neogaf PC 2017</Name>
+      <Url>https://www.neogaf.com/threads/2017-pc-screenshot-thread.1329720</Url>
+      <RootDirectory>F:\Screenshots\neogaf\PC_2017</RootDirectory>
+    </ScreenshotThread>
+    <ScreenshotThread>
+      <Name>Neogaf Consoles 2018</Name>
+      <Url>https://www.neogaf.com/threads/2018-console-screenshot-thread-read-rules-in-op.1460621</Url>
+      <RootDirectory>F:\Screenshots\neogaf\Consoles_2018</RootDirectory>
+    </ScreenshotThread>
+
+    DELETE THIS LINE ONCE YOU ENTERED A PROPER ROOTDIRECTORY FOR EACH THREAD   -->
+
+  </Threads>
+</Settings>
