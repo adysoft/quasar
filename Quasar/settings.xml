@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <!-- ScreenshotThread disabled so you get a chance to set the RootDirectory as you desire, once done, you can re-enable them -->
+
+  <!-- DELETE THIS LINE ONCE YOU HAVE ENTERED PROPER ROOT DIRECTORIES FOR EACH THREAD
+
   <TempFolder>F:\Screenshots\temp</TempFolder>
   <Threads>
-
-    <!-- ScreenshotThread disabled so you get a chance to set the RootDirectory as you desire, once done, you can re-enable them -->
-
-    <!-- DELETE THIS LINE ONCE YOU HAVE ENTERED PROPER ROOT DIRECTORIES FOR EACH THREAD
-
     <ScreenshotThread>
       <Name>Resetera PC 2019</Name>
       <Url>https://www.resetera.com/threads/2019-pc-screenshot-thread.91108/</Url>
@@ -28,7 +27,7 @@
       <RootDirectory>F:\Screenshots\neogaf\Consoles_2019</RootDirectory>
     </ScreenshotThread>
 
-    DELETE THIS LINE ONCE YOU HAVE ENTERED PROPER ROOT DIRECTORIES FOR EACH THREAD   -->
+    DELETE THIS LINE ONCE YOU HAVE ENTERED PROPER ROOT DIRECTORIES FOR EACH THREAD   
 
-  </Threads>
+  </Threads>-->
 </Settings>
