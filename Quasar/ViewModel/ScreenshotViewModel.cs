@@ -21,6 +21,8 @@ namespace Quasar.ViewModel
 
         public RelayCommand OpenThreadCommand { get; set; }
         public string LocalPath { get; set; }
+        public string TempPath { get; set; }
         public string ThreadPost { get; set; }
+        public string ThumbnailPath { get; set; }
     }
 }

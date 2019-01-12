@@ -61,7 +61,7 @@
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel>
-                                <Image Source="{Binding LocalPath}" Width="400" Height="225" Stretch="UniformToFill" MouseLeftButtonDown="OnScreenshotLeftButtonDown"/>
+                                <Image Source="{Binding ThumbnailPath}" Width="400" Height="225" Stretch="UniformToFill" MouseLeftButtonDown="OnScreenshotLeftButtonDown"/>
                                 <Button Content="Source" Command="{Binding OpenThreadCommand}"/>
                             </StackPanel>
                         </DataTemplate>

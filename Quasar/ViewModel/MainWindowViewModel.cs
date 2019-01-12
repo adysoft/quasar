@@ -10,6 +10,9 @@ using Crawler;
 
 namespace Quasar.ViewModel
 {
+    using System.Diagnostics;
+    using System.Threading;
+
     public class MainWindowViewModel : BaseViewModel
     {
         private double _progress;
@@ -32,13 +35,13 @@ namespace Quasar.ViewModel
                     {
                         BackgroundWorker bw = new BackgroundWorker();
                         bw.DoWork += OnReseteraDoWork;
-                        bw.RunWorkerAsync(screenshotThread);
+                        bw.RunWorkerAsync(new JobData(screenshotThread, Settings.TempFolder));
                     }
                     else if(screenshotThread.Url.ToLower().Contains("neogaf"))
                     {
                         BackgroundWorker bw = new BackgroundWorker();
                         bw.DoWork += OnNeogafDoWork;
-                        bw.RunWorkerAsync(screenshotThread);
+                        bw.RunWorkerAsync(new JobData(screenshotThread, Settings.TempFolder));
                     }
                 }
             }
@@ -46,9 +49,9 @@ namespace Quasar.ViewModel
 
         private void OnReseteraDoWork(object sender, DoWorkEventArgs e)
         {
-            if (e.Argument is ScreenshotThread screenshotThread)
+            if (e.Argument is JobData jobData)
             {
-                ReseteraCrawler crawler = new ReseteraCrawler(new CrawlerSettings(screenshotThread.Name, screenshotThread.Url, screenshotThread.RootDirectory, screenshotThread.CacheDirectory));
+                ReseteraCrawler crawler = new ReseteraCrawler(new CrawlerSettings(jobData.ScreenshotThread.Name, jobData.ScreenshotThread.Url, jobData.ScreenshotThread.RootDirectory, jobData.ScreenshotThread.CacheDirectory, jobData.TempDirectory));
                 crawler.OnErrorEvent += Crawler_OnErrorEvent;
                 crawler.ThreadDownloadProgressEvent += Crawler_ThreadDownloadProgress;
                 crawler.DownloadingScreenshotEvent += Crawler_DownloadingScreenshotEvent;
@@ -60,9 +63,9 @@ namespace Quasar.ViewModel
 
         private void OnNeogafDoWork(object sender, DoWorkEventArgs e)
         {
-            if (e.Argument is ScreenshotThread screenshotThread)
+            if (e.Argument is JobData jobData)
             {
-                NeogafCrawler crawler = new NeogafCrawler(new CrawlerSettings(screenshotThread.Name, screenshotThread.Url, screenshotThread.RootDirectory, screenshotThread.CacheDirectory));
+                NeogafCrawler crawler = new NeogafCrawler(new CrawlerSettings(jobData.ScreenshotThread.Name, jobData.ScreenshotThread.Url, jobData.ScreenshotThread.RootDirectory, jobData.ScreenshotThread.CacheDirectory, jobData.TempDirectory));
                 crawler.OnErrorEvent += Crawler_OnErrorEvent;
                 crawler.ThreadDownloadProgressEvent += Crawler_ThreadDownloadProgress;
                 crawler.DownloadingScreenshotEvent += Crawler_DownloadingScreenshotEvent;
@@ -76,13 +79,13 @@ namespace Quasar.ViewModel
         {
             App.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
             {
-                if (RecentScreenshots.Count < 100)
+                if (RecentScreenshots.Count < 300)
                 {
-                    RecentScreenshots.Add(new ScreenshotViewModel {LocalPath = screenshot.LocalPath, ThreadPost = screenshot .ThreadPost});
+                    RecentScreenshots.Add(new ScreenshotViewModel {LocalPath = screenshot.LocalPath, TempPath = screenshot.TempPath, ThumbnailPath = screenshot.ThumbnailPath, ThreadPost = screenshot .ThreadPost});
                 }
                 else
                 {
-                    AddToLogs($"WARN: Maximum number of screenshot displayed (100).");
+                    AddToLogs($"WARN: Maximum number of screenshot displayed (300).");
                 }
             }));
         }
@@ -154,7 +157,17 @@ namespace Quasar.ViewModel
                     MessageBox.Show("No screenshot threads found your settings file.");
                     Application.Current.Shutdown();
                 }
+
+                while (Directory.Exists(Settings.TempFolder))
+                {
+                    Directory.Delete(Settings.TempFolder, true);
+                    Thread.Sleep(100);
+                }
+
+                Directory.CreateDirectory(Settings.TempFolder);
             }
+
+            Debug.Assert(Directory.Exists(Settings.TempFolder));
         }
 
         private void AddToLogs(string message)

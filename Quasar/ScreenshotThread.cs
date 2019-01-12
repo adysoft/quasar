@@ -13,5 +13,6 @@ namespace Quasar
         public string Url { get; set; }
         public string RootDirectory { get; set; }
         public string CacheDirectory => Path.Combine(RootDirectory, "cache");
+        public string TempDirectory { get; set; }
     }
 }

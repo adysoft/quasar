@@ -40,8 +40,8 @@ namespace Quasar
         {
             if(e.ClickCount == 2 && sender is Image image)
             {
-                string path = image.Source.ToString();
-                Process.Start(path);
+                var vm = image.DataContext as ScreenshotViewModel;
+                Process.Start(vm.TempPath);
             }
         }
     }

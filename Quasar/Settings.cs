@@ -9,6 +9,8 @@ namespace Quasar
             Threads = new List<ScreenshotThread>();
         }
 
+        public string TempFolder { get; set; }
+
         public List<ScreenshotThread> Threads { get; set; }
     }
 }

@@ -28,7 +28,7 @@ namespace Crawler
         {
             WebClient webClient = new WebClient();
             string src = webClient.DownloadString(StartPage);
-            string pattern = "data-last=\"";
+            string pattern = "min=\"1\" max=\"";
             int patternStartIndex = src.IndexOf(pattern, StringComparison.Ordinal);
             if (patternStartIndex == -1)
             {
@@ -43,7 +43,7 @@ namespace Crawler
 
         protected override string GetScreenshotAnchorUrl(string page, string source, string screenshotUrl)
         {
-            string anchorPattern = "title=\"Permalink\" class=\"item muted postNumber hashPermalink OverlayTrigger\" data-href=\"";
+            string anchorPattern = "class=\"message-userContent lbContainer js-lbContainer  \" data-lb-id=\"";
             int screenshotUrlIndex = source.IndexOf(screenshotUrl, StringComparison.Ordinal);
             int anchorIndex = source.Substring(0, screenshotUrlIndex).LastIndexOf(anchorPattern, StringComparison.Ordinal);
             if (anchorIndex == -1)
@@ -52,14 +52,14 @@ namespace Crawler
             }
             else
             {
-                int endOffset = source.IndexOf("/\"", anchorIndex + anchorPattern.Length, StringComparison.Ordinal);
+                int endOffset = source.IndexOf("\"", anchorIndex + anchorPattern.Length, StringComparison.Ordinal);
                 if (endOffset == -1)
                 {
                     throw new Exception("Failed to find anchor url.");
                 }
 
                 string anchor = source.Substring(anchorIndex + anchorPattern.Length, endOffset - (anchorIndex + anchorPattern.Length));
-                return $"{new Uri(page).Host}/{anchor}";
+                return $"{page.Substring(0, page.LastIndexOf("/"))}/{anchor}";
             }
         }
     }

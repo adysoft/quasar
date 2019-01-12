@@ -10,6 +10,8 @@ using System.Windows.Media.Imaging;
 
 namespace Crawler
 {
+    using System.Diagnostics;
+
     public abstract class BaseCrawler
     {
         protected BaseCrawler(CrawlerSettings settings)
@@ -46,34 +48,42 @@ namespace Crawler
         public List<Screenshot> SyncScreenshots()
         {
             List<Screenshot> synced = new List<Screenshot>();
-            int pageCount = GetNumberOfPagesOnline();
-            int startPage = Math.Max(GetNumberOfPagesOffline(), 1);
-            int pagesToProcessed = pageCount - startPage + 1;
-            int processedPage = 0;
-            for (int i = Math.Max(startPage, 1); i <= pageCount; i++)
+            try
             {
-                try
+                int pageCount = GetNumberOfPagesOnline();
+                int startPage = Math.Max(GetNumberOfPagesOffline(), 1);
+                int pagesToProcessed = pageCount - startPage + 1;
+                int processedPage = 0;
+                for (int i = Math.Max(startPage, 1); i <= pageCount; i++)
                 {
-                    string page = GetPageUrlAtIndex(i);
-                    if (ThreadDownloadProgressEvent != null)
+                    try
                     {
-                        double progress = (processedPage++) / (double) pagesToProcessed;
-                        ThreadDownloadProgressEvent(page, progress * 100);
-                    }
+                        string page = GetPageUrlAtIndex(i);
+                        if (ThreadDownloadProgressEvent != null)
+                        {
+                            double progress = (processedPage++) / (double)pagesToProcessed;
+                            ThreadDownloadProgressEvent(page, progress * 100);
+                        }
 
-                    var pageDirectory = Path.Combine(Settings.RootDirectory, $"page-{i}");
-                    var screenshotUrls = GetScreenshotUrls(page);
-                    synced = DownloadScreenshots(screenshotUrls.Item2, pageDirectory, page, screenshotUrls.Item1);
+                        var pageDirectory = Path.Combine(Settings.RootDirectory, $"page-{i}");
+                        var screenshotUrls = GetScreenshotUrls(page);
+                        synced = DownloadScreenshots(screenshotUrls.Item2, pageDirectory, page, screenshotUrls.Item1, Settings.TempRootDirectory);
+                    }
+                    catch (Exception e)
+                    {
+                        OnErrorEvent?.Invoke(new Exception($"Error when processing page ${i}", e));
+                        break;
+                    }
+                    finally
+                    {
+                        ThreadSyncedEvent?.Invoke(Settings.Name);
+                    }
                 }
-                catch (Exception e)
-                {
-                    OnErrorEvent?.Invoke(new Exception($"Error when processing page ${i}", e));
-                    break;
-                }
-                finally
-                {
-                    ThreadSyncedEvent?.Invoke(Settings.Name);
-                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+                ThreadSyncedEvent?.Invoke(Settings.Name);
             }
 
             return synced;
@@ -88,7 +98,7 @@ namespace Crawler
             return Directory.GetDirectories(Settings.RootDirectory, "page-*").Length;
         }
 
-        protected List<Screenshot> DownloadScreenshots(ReadOnlyCollection<string> screenshotUrls, string targetDirectory, string page, string pageSource)
+        protected List<Screenshot> DownloadScreenshots(ReadOnlyCollection<string> screenshotUrls, string targetDirectory, string page, string pageSource, string tempDirectory)
         {
             var screenshots = new List<Screenshot>();
             if (!Directory.Exists(targetDirectory))
@@ -136,11 +146,25 @@ namespace Crawler
                         if (height * width > 1027 * 768)
                         {
                             string targetFile = Path.Combine(targetDirectory, fileName);
+                            string tempFile = Path.Combine(tempDirectory, fileName);
                             if (!File.Exists(targetFile))
                             {
                                 File.Copy(cachedFile, targetFile);
+                                if (!File.Exists(tempFile))
+                                {
+                                    File.Copy(targetFile, tempFile);
+                                }
+
+                                string thumbnailsDirectory = Path.Combine(tempDirectory, "thumbnails");
+                                if (!Directory.Exists(thumbnailsDirectory))
+                                {
+                                    Directory.CreateDirectory(thumbnailsDirectory);
+                                }
+
+                                string thumbnailPath = Path.Combine(thumbnailsDirectory, fileName);
+                                ImageProcessing.MakeThumbnail(targetFile, thumbnailPath);
                                 File.Delete(cachedFile);
-                                var screenshot = new Screenshot { LocalPath = targetFile, Url = screenshotUrl, ThreadPost = GetScreenshotAnchorUrl(page, pageSource, screenshotUrl) };
+                                var screenshot = new Screenshot { LocalPath = targetFile, TempPath = tempFile, ThumbnailPath = thumbnailPath, Url = screenshotUrl, ThreadPost = GetScreenshotAnchorUrl(page, pageSource, screenshotUrl) };
                                 screenshots.Add(screenshot);
                                 ScreenshotDownloaded?.Invoke(screenshot);
                             }

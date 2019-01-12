@@ -47,20 +47,14 @@ namespace Crawler
         {
             WebClient webClient = new WebClient();
             string src = webClient.DownloadString(StartPage);
-            string pattern1 = "pageNav-page--skipEnd";
-            string pattern2 = "pageNav-page";
-            string pattern3 = "page-";
+            string pattern1 = "menu menu--pageJump";
+            string pattern2 = "max=\"";
             int pattern1StartIndex =-1;
             int pattern2StartIndex = -1;
-            int pattern3StartIndex=-1;
             pattern1StartIndex = src.IndexOf(pattern1, StringComparison.Ordinal);
             if (pattern1StartIndex == -1)
             {
-                pattern2StartIndex = src.LastIndexOf(pattern2, StringComparison.Ordinal);
-                if (pattern2StartIndex == -1)
-                {
-                    throw new Exception("Failed to get page count.");
-                }
+                return 1;
             }
 
             if (pattern2StartIndex == -1)
@@ -72,14 +66,8 @@ namespace Crawler
                 }
             }
 
-            pattern3StartIndex = src.IndexOf(pattern3, pattern2StartIndex + pattern2.Length, StringComparison.Ordinal);
-            if (pattern3StartIndex == -1)
-            {
-                throw new Exception("Failed to get page count.");
-            }
-
-            int patternEndIndex = src.IndexOf("\"", pattern3StartIndex + pattern3.Length, StringComparison.Ordinal);
-            string pageCountStr = src.Substring(pattern3StartIndex + pattern3.Length, patternEndIndex - (pattern3StartIndex + pattern3.Length));
+            int patternEndIndex = src.IndexOf("\"", pattern2StartIndex + pattern2.Length, StringComparison.Ordinal);
+            string pageCountStr = src.Substring(pattern2StartIndex + pattern2.Length, patternEndIndex - (pattern2StartIndex + pattern2.Length));
             int pageCount = Convert.ToInt32(pageCountStr);
             return pageCount;
         }
